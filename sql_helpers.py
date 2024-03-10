@@ -22,7 +22,7 @@ class ChatbotPipeline:
         self.chain_prompt = ChatPromptTemplate.from_template(CHAIN_PROMPT_TEMPLATE)
 
         self.sql_chain = (
-            RunnablePassthrough.assign(schema=lambda x: self.get_schema(x))
+            RunnablePassthrough.assign(schema=self.get_schema)
             | self.sql_prompt
             | self.llm.bind(stop="\nSQL Result:")
             | StrOutputParser()
@@ -43,14 +43,6 @@ class ChatbotPipeline:
     def run_query(self, query):
         return self.db.run(query)
 
-    # def get_sql_chain(self):
-    #     sql_chain = (
-    #         RunnablePassthrough.assign(schema=self.get_schema)
-    #         | self.sql_prompt
-    #         | self.llm.bind(stop="\nSQL Result:")
-    #         | StrOutputParser()
-    #     )
-    #     return sql_chain
 
     def run_full_chain(self, query):
         full_chain = (
