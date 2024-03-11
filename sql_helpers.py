@@ -17,7 +17,7 @@ class ChatbotPipeline:
     def __init__(self, csv_file=None, db_name="dati"):
         self.engine = self.create_db_engine(csv_file, db_name)
         self.db = SQLDatabase(engine=self.engine)
-        self.llm = ChatOpenAI()
+        self.llm = ChatOpenAI(temperature=0.0)
         self.sql_prompt = ChatPromptTemplate.from_template(SQL_PROMPT_TEMPLATE)
         self.chain_prompt = ChatPromptTemplate.from_template(CHAIN_PROMPT_TEMPLATE)
 
@@ -42,7 +42,6 @@ class ChatbotPipeline:
 
     def run_query(self, query):
         return self.db.run(query)
-
 
     def run_full_chain(self, query):
         full_chain = (
