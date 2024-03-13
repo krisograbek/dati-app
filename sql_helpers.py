@@ -14,10 +14,11 @@ load_dotenv()
 
 
 class ChatbotPipeline:
-    def __init__(self, csv_file=None, db_name="dati"):
+    def __init__(self, csv_file=None, db_name="dati", model=4):
+        self.model_name = "gpt-3.5-turbo" if model == 3 else "gpt-4-0125-preview"
         self.engine = self.create_db_engine(csv_file, db_name)
         self.db = SQLDatabase(engine=self.engine)
-        self.llm = ChatOpenAI(temperature=0.0)
+        self.llm = ChatOpenAI(temperature=0.0, model=self.model_name)
         self.sql_prompt = ChatPromptTemplate.from_template(SQL_PROMPT_TEMPLATE)
         self.chain_prompt = ChatPromptTemplate.from_template(CHAIN_PROMPT_TEMPLATE)
 
